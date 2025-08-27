@@ -1,263 +1,747 @@
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1" />
-  <title>Lyrics Annotator · Beautiful & Highlighted</title>
-  <!-- We will try to load pinyin-pro at runtime, but the app also has a safe offline fallback. -->
-  <style>
-    :root{
-      --bg:#f9fafb;--card:#ffffff;--text:#1f2937;--muted:#6b7280;--border:#d1d5db;
-      --b1:#3b82f6;--b2:#8b5cf6;--ok:#10b981;--warn:#f59e0b;--err:#ef4444;
-    }
-    *{box-sizing:border-box}
-    html,body{height:100%}
-    body{margin:0;background:var(--bg);color:var(--text);font-family:ui-sans-serif,system-ui,-apple-system,Segoe UI,Roboto,Helvetica,Arial}
-    .wrap{max-width:1040px;margin:32px auto;padding:0 16px}
-    header{text-align:center;margin-bottom:18px}
-    header h1{margin:0;font-size:2.2rem}
-    header p{margin:6px 0 0;color:var(--muted)}
+	<meta charset="UTF-8" />
+	<meta name="viewport"
+				content="width=device-width, initial-scale=1" />
+	<title>Lyrics Annotator · Beautiful & Highlighted</title>
+	<!-- We will try to load pinyin-pro at runtime, but the app also has a safe offline fallback. -->
+	<style>
+		:root {
+			--bg: #f9fafb;
+			--card: #ffffff;
+			--text: #1f2937;
+			--muted: #6b7280;
+			--border: #d1d5db;
+			--b1: #3b82f6;
+			--b2: #8b5cf6;
+			--ok: #10b981;
+			--warn: #f59e0b;
+			--err: #ef4444;
+		}
 
-    .card{background:var(--bg);border:1px solid var(--border);border-radius:16px;box-shadow:0 10px 30px rgba(0,0,0,.25);padding:18px}
-    .grid{display:grid;gap:14px}
+		* {
+			box-sizing: border-box
+		}
 
-    textarea{width:100%;min-height:160px;background:var(--bg);color:var(--text);border:1px solid var(--border);border-radius:12px;padding:14px 16px;font-size:15px;line-height:1.6;resize:vertical}
-    .controls{display:flex;flex-wrap:wrap;gap:10px;align-items:center}
-    button{appearance:none;border:none;border-radius:12px;background:var(--b1);color:#071225;font-weight:700;padding:10px 16px;cursor:pointer;box-shadow:0 8px 18px rgba(96,165,250,.35);transition:filter .15s,transform .06s}
-    button:hover{filter:brightness(1.07)}
-    button:active{transform:translateY(1px)}
-    .ghost{background:var(--bg);color:var(--text);box-shadow:none;border:1px solid var(--border)}
+		html,
+		body {
+			height: 100%
+		}
 
-    .status{display:flex;gap:8px;flex-wrap:wrap}
-    .badge{display:inline-flex;align-items:center;gap:8px;padding:6px 10px;border-radius:999px;border:1px solid var(--border);background:var(--bg);color:var(--muted);font-size:12px}
-    .dot{width:8px;height:8px;border-radius:999px;display:inline-block}
-    .ok{background:var(--ok)}.warn{background:var(--warn)}.err{background:var(--err)}.b1{background:var(--b1)}.b2{background:var(--b2)}
+		body {
+			margin: 0;
+			background: var(--bg);
+			color: var(--text);
+			font-family: ui-sans-serif, system-ui, -apple-system, Segoe UI, Roboto, Helvetica, Arial
+		}
 
-    .steps{display:grid;gap:14px;margin-top:6px}
-    .step{border:1px solid var(--border);border-radius:12px;padding:12px;background:var(--bg)}
-    .step h3{margin:0 0 6px;color:var(--muted);font-size:15px}
-    .out{white-space:pre-wrap;word-break:break-word;background:var(--bg);border:1px dashed #223;border-radius:8px;padding:12px;line-height:1.85;font-size:18px}
+		.wrap {
+			max-width: 1040px;
+			margin: 32px auto;
+			padding: 0 16px
+		}
 
-    /* highlighting */
-    .r2{color:var(--b1);font-weight:700}
-    /* .r3{color:var(--b2);font-weight:700} */
-    .plain{color:var(--text)}
-    .nonhan{color:var(--muted)}
+		header {
+			text-align: center;
+			margin-bottom: 18px
+		}
 
-    .tests{margin-top:16px;border-top:1px dashed var(--border);padding-top:14px}
-    .test-row{display:flex;gap:10px;align-items:center;flex-wrap:wrap}
-    .code{font-family:ui-monospace,SFMono-Regular,Menlo,Monaco,Consolas,monospace;background:var(--bg);border:1px solid var(--border);border-radius:8px;padding:6px 8px}
-    .pass{color:var(--ok)}.fail{color:var(--err)}
-  </style>
+		header h1 {
+			margin: 0;
+			font-size: 1.2rem
+		}
+
+		header p {
+			margin: 6px 0 0;
+			color: var(--muted)
+		}
+
+		.card {
+			background: var(--bg);
+			border: 1px solid var(--border);
+			border-radius: 16px;
+			box-shadow: 0 10px 30px rgba(0, 0, 0, .25);
+			padding: 18px
+		}
+
+		.grid {
+			display: grid;
+			gap: 14px
+		}
+
+		textarea {
+			width: 100%;
+			min-height: 160px;
+			background: var(--bg);
+			color: var(--text);
+			border: 1px solid var(--border);
+			border-radius: 12px;
+			padding: 14px 16px;
+			font-size: 15px;
+			line-height: 1.6;
+			resize: vertical
+		}
+
+		.controls {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 10px;
+			align-items: center
+		}
+
+		button {
+			appearance: none;
+			border: none;
+			border-radius: 12px;
+			background: var(--b1);
+			color: #071225;
+			font-weight: 700;
+			padding: 10px 16px;
+			cursor: pointer;
+			box-shadow: 0 8px 18px rgba(96, 165, 250, .35);
+			transition: filter .15s, transform .06s
+		}
+
+		button:hover {
+			filter: brightness(1.07)
+		}
+
+		button:active {
+			transform: translateY(1px)
+		}
+
+		.ghost {
+			background: var(--bg);
+			color: var(--text);
+			box-shadow: none;
+			border: 1px solid var(--border)
+		}
+
+		.status {
+			display: flex;
+			gap: 8px;
+			flex-wrap: wrap
+		}
+
+		.badge {
+			display: inline-flex;
+			align-items: center;
+			gap: 8px;
+			padding: 6px 10px;
+			border-radius: 999px;
+			border: 1px solid var(--border);
+			background: var(--bg);
+			color: var(--muted);
+			font-size: 12px
+		}
+
+		.dot {
+			width: 8px;
+			height: 8px;
+			border-radius: 999px;
+			display: inline-block
+		}
+
+		.ok {
+			background: var(--ok)
+		}
+
+		.warn {
+			background: var(--warn)
+		}
+
+		.err {
+			background: var(--err)
+		}
+
+		.b1 {
+			background: var(--b1)
+		}
+
+		.b2 {
+			background: var(--b2)
+		}
+
+		.steps {
+			display: grid;
+			gap: 14px;
+			margin-top: 6px
+		}
+
+		.step {
+			border: 1px solid var(--border);
+			border-radius: 12px;
+			padding: 12px;
+			background: var(--bg)
+		}
+
+		.step h3 {
+			margin: 0 0 6px;
+			color: var(--muted);
+			font-size: 15px
+		}
+
+		.out {
+			white-space: pre-wrap;
+			word-break: break-word;
+			background: var(--bg);
+			border: 1px dashed #223;
+			border-radius: 8px;
+			padding: 12px;
+			line-height: 1.85;
+			font-size: 18px
+		}
+
+		/* highlighting */
+		.r2 {
+			color: var(--b1);
+			font-weight: 700
+		}
+
+		.r3 {
+			color:var(--b2);
+			font-weight:700
+		}
+
+		.plain {
+			color: var(--text)
+		}
+
+		.nonhan {
+			color: var(--muted)
+		}
+
+		.tests {
+			margin-top: 16px;
+			border-top: 1px dashed var(--border);
+			padding-top: 14px
+		}
+
+		.test-row {
+			display: flex;
+			gap: 10px;
+			align-items: center;
+			flex-wrap: wrap
+		}
+
+		.code {
+			font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, monospace;
+			background: var(--bg);
+			border: 1px solid var(--border);
+			border-radius: 8px;
+			padding: 6px 8px
+		}
+
+		.pass {
+			color: var(--ok)
+		}
+
+		.fail {
+			color: var(--err)
+		}
+
+		@media (width <= 1250px) {
+			#lyrics,
+			.out {
+				font-size: 0.9rem;
+			}
+		}
+	</style>
 </head>
-<body>
-  <div class="wrap">
-    <header>
-      <h1>🎶 Lyrics Annotator</h1>
-      <p>Paste Chinese lyrics, then annotate with custom rules. Colors show what changed at each step.</p>
-    </header>
 
-    <div class="card grid">
-      <textarea id="lyrics" placeholder="在这里粘贴中文歌词…\n示例：茫茫人海之中 我找到我的家"></textarea>
-      <div class="controls">
-        <button id="annotateBtn">Annotate</button>
-        <button id="copyBtn" class="ghost">Copy Final</button>
-        <button id="retryLib" class="ghost" title="Retry loading the pinyin engine if network is available">Retry Pinyin Engine</button>
+<body>
+	<div class="wrap">
+		<header>
+			<h1>🎶 Lyrics Annotator</h1>
+		</header>
+
+		<div class="card grid">
+			<textarea id="lyrics"
+								placeholder="在这里粘贴中文歌词…\n示例：茫茫人海之中 我找到我的家"></textarea>
+			<div class="controls">
+				<button id="annotateBtn">Annotate</button>
+				<button id="copyBtn"
+								class="ghost">Copy Final</button>
+				<!-- <button id="retryLib" class="ghost" title="Retry loading the pinyin engine if network is available">Retry Pinyin Engine</button>
         <div class="status">
           <span id="libStatus" class="badge"><span class="dot warn"></span><span>Engine: loading…</span></span>
           <span class="badge"><span class="dot b1"></span>Rule 2 (initial moved)</span>
           <span class="badge"><span class="dot b2"></span>Rule 3 (n/ng trim)</span>
-        </div>
-      </div>
+        </div> -->
+			</div>
 
-      <div class="steps">
-        <div class="step"><h3>Step 1 — Full pinyin</h3><div id="s1" class="out"></div></div>
-        <div class="step"><h3>Step 2 — Initial prepending (d/t/n/l/g/k)</h3><div id="s2" class="out"></div></div>
+			<div class="steps">
+				<!-- <div class="step"><h3>Step 1 — Full pinyin</h3><div id="s1" class="out"></div></div> -->
+				<!-- <div class="step"><h3>Step 2 — Initial prepending (d/t/n/l/g/k)</h3><div id="s2" class="out"></div></div>
         <div class="step"><h3>Step 3a — Keep only final n/ng</h3><div id="s3a" class="out"></div></div>
-        <div class="step"><h3>Step 3b — Remove other suffixes</h3><div id="s3b" class="out"></div></div>
-        <div class="step"><h3>Final — Remove pinyin for unedited chars</h3><div id="final" class="out"></div></div>
-      </div>
+        <div class="step"><h3>Step 3b — Remove other suffixes</h3><div id="s3b" class="out"></div></div> -->
+				<div class="step">
+					<h3>Annotated lyrics</h3>
+					<div id="final"
+							 class="out"></div>
+				</div>
+			</div>
 
-      <div class="tests">
+			<!-- <div class="tests">
         <div class="test-row">
           <button id="runTests" class="ghost">Run Offline Tests</button>
           <span id="testSummary" class="badge"><span class="dot warn"></span>no tests run</span>
         </div>
         <div id="testLog" class="out" style="margin-top:8px;font-size:14px"></div>
-      </div>
-    </div>
-  </div>
+      </div> -->
+		</div>
+	</div>
 
-  <script>
-    // ---- Robust loader & fallback ----
-    const LIB_URLS = [
-      'https://cdn.jsdelivr.net/npm/pinyin-pro/dist/pinyin-pro.min.js',
-      'https://unpkg.com/pinyin-pro/dist/pinyin-pro.min.js'
-    ];
+	<script>
+		// ---- Robust loader & fallback ----
+		const LIB_URLS = [
+			'https://cdnjs.cloudflare.com/ajax/libs/pinyin-pro/3.27.0/index.js',
+			'https://cdnjs.cloudflare.com/ajax/libs/pinyin-pro/3.27.0/index.min.js'
+		];
 
-    function loadScript(url){
-      return new Promise((resolve,reject)=>{const s=document.createElement('script');s.src=url;s.async=true;s.onload=()=>resolve(url);s.onerror=()=>reject(new Error('load fail'));document.head.appendChild(s);});
-    }
+		function loadScript(url) {
+			return new Promise((resolve, reject) => {
+				const s = document.createElement('script');
+				s.src = url;
+				s.async = true;
+				s.onload = () => resolve(url);
+				s.onerror = () => reject(new Error('load fail'));
+				document.head.appendChild(s);
+			});
+		}
 
-    async function ensurePinyinPro(){
-      if (window.pinyinPro && typeof window.pinyinPro.pinyin==='function') return true;
-      for (const url of LIB_URLS){
-        try { await loadScript(url); if (window.pinyinPro) return true; } catch(_){/* try next */}
-      }
-      return !!(window.pinyinPro && typeof window.pinyinPro.pinyin==='function');
-    }
+		async function ensurePinyinPro() {
+			if (window.pinyinPro && typeof window.pinyinPro.pinyin === 'function') return true;
+			for (const url of LIB_URLS) {
+				try {
+					await loadScript(url);
+					if (window.pinyinPro) return true;
+				} catch (_) {
+					/* try next */
+				}
+			}
+			return !!(window.pinyinPro && typeof window.pinyinPro.pinyin === 'function');
+		}
 
-    // Minimal fallback dictionary for offline/demo usage (NOT comprehensive!)
-    const FALLBACK_PINYIN = new Map(Object.entries({
-      '的':'de','到':'dao','天':'tian','空':'kong','想':'xiang','雲':'yun','云':'yun','藍':'lan','蓝':'lan',
-      '我':'wo','你':'ni','心':'xin','安':'an','在':'zai','有':'you','家':'jia','人':'ren','海':'hai','之':'zhi','中':'zhong',
-      '茫':'mang','找':'zhao','到':'dao','這':'zhe','这':'zhe','不':'bu','完':'wan','美':'mei','世':'shi','界':'jie',
-      '遇':'yu','見':'jian','见':'jian','就':'jiu','很':'hen','錯':'cuo','错':'cuo','了':'le','都':'dou','是':'shi','說':'shuo','说':'shuo',
-      '開':'kai','开':'kai','眼':'yan','看':'kan','著':'zhe','着':'zhe','臉':'lian','脸':'lian','幸':'xing','福':'fu',
-      '瞬':'shun','間':'jian','间':'jian','點':'dian','点':'dian','膽':'dan','胆':'dan','怯':'qie','哪':'na','來':'lai','来':'lai',
-      '資':'zi','资':'zi','格':'ge','擁':'yong','拥':'yong','這':'zhe','麼':'me','么':'me','畫':'hua','画':'hua','面':'mian','終':'zhong','终':'zhong','個':'ge','个':'ge','久':'jiu','常':'chang','陪':'pei'
-    }));
+		// Minimal fallback dictionary for offline/demo usage (NOT comprehensive!)
+		const FALLBACK_PINYIN = new Map(Object.entries({
+			'的': 'de',
+			'到': 'dao',
+			'天': 'tian',
+			'空': 'kong',
+			'想': 'xiang',
+			'雲': 'yun',
+			'云': 'yun',
+			'藍': 'lan',
+			'蓝': 'lan',
+			'我': 'wo',
+			'你': 'ni',
+			'心': 'xin',
+			'安': 'an',
+			'在': 'zai',
+			'有': 'you',
+			'家': 'jia',
+			'人': 'ren',
+			'海': 'hai',
+			'之': 'zhi',
+			'中': 'zhong',
+			'茫': 'mang',
+			'找': 'zhao',
+			'到': 'dao',
+			'這': 'zhe',
+			'这': 'zhe',
+			'不': 'bu',
+			'完': 'wan',
+			'美': 'mei',
+			'世': 'shi',
+			'界': 'jie',
+			'遇': 'yu',
+			'見': 'jian',
+			'见': 'jian',
+			'就': 'jiu',
+			'很': 'hen',
+			'錯': 'cuo',
+			'错': 'cuo',
+			'了': 'le',
+			'都': 'dou',
+			'是': 'shi',
+			'說': 'shuo',
+			'说': 'shuo',
+			'開': 'kai',
+			'开': 'kai',
+			'眼': 'yan',
+			'看': 'kan',
+			'著': 'zhe',
+			'着': 'zhe',
+			'臉': 'lian',
+			'脸': 'lian',
+			'幸': 'xing',
+			'福': 'fu',
+			'瞬': 'shun',
+			'間': 'jian',
+			'间': 'jian',
+			'點': 'dian',
+			'点': 'dian',
+			'膽': 'dan',
+			'胆': 'dan',
+			'怯': 'qie',
+			'哪': 'na',
+			'來': 'lai',
+			'来': 'lai',
+			'資': 'zi',
+			'资': 'zi',
+			'格': 'ge',
+			'擁': 'yong',
+			'拥': 'yong',
+			'這': 'zhe',
+			'麼': 'me',
+			'么': 'me',
+			'畫': 'hua',
+			'画': 'hua',
+			'面': 'mian',
+			'終': 'zhong',
+			'终': 'zhong',
+			'個': 'ge',
+			'个': 'ge',
+			'久': 'jiu',
+			'常': 'chang',
+			'陪': 'pei'
+		}));
 
-    function getPinyinChar(ch){
-      if (!/[\u4e00-\u9fff]/.test(ch)) return '';
-      if (window.pinyinPro && typeof window.pinyinPro.pinyin==='function'){
-        try { return window.pinyinPro.pinyin(ch, {toneType:'none'}); } catch(_){ /* fall through */ }
-      }
-      return FALLBACK_PINYIN.get(ch) || '';
-    }
+		function getPinyinChar(ch) {
+			if (!/[\u4e00-\u9fff]/.test(ch)) return '';
+			if (window.pinyinPro && typeof window.pinyinPro.pinyin === 'function') {
+				try {
+					return window.pinyinPro.pinyin(ch, {
+						toneType: 'none'
+					});
+				} catch (_) {
+					/* fall through */
+				}
+			}
 
-    // ---- Core processing (HTML-highlighting version) ----
-    const initials = new Set(['d','t','n','l','g','k']);
-    const isHan = (ch) => /[\u4e00-\u9fff]/.test(ch);
+			console.log('Using PINYIN fallback');
+			return FALLBACK_PINYIN.get(ch) || '';
+		}
 
-    function processLyrics(text){
-      const items = [];
-      for (const ch of text){
-        if (isHan(ch)) items.push({ch, py:getPinyinChar(ch), nonHan:false}, {ch: ' ', py:'', nonHan:true});
-        else items.push({ch, py:'', nonHan:true});
-      }
+		// ---- Core processing (HTML-highlighting version) ----
+		const initials = new Set(['d', 't', 'n', 'l', 'g', 'k']);
+		const isHan = (ch) => /[\u4e00-\u9fff]/.test(ch);
 
-      const s1=[], s2=[], s3a=[], s3b=[], sFinal=[];
+		function processLyrics(text) {
+			const items = [];
+			for (const ch of text) {
+				if (isHan(ch)) items.push({
+					ch,
+					py: getPinyinChar(ch),
+					nonHan: false
+				}, {
+					ch: ' ',
+					py: '',
+					nonHan: true
+				});
+				else items.push({
+					ch,
+					py: '',
+					nonHan: true
+				});
+			}
 
-      // Step 1
-      items.forEach(it=>{ s1.push(it.nonHan? span('nonhan',it.ch) : span('plain', it.ch + it.py)); });
+			const s1 = [],
+				s2 = [],
+				s3a = [],
+				s3b = [],
+				sFinal = [];
 
-      // Step 2
-      const per2 = items.map(it=>{
-        if (it.nonHan) return {...it, s2:it.ch, r2:false, pPart:''};
-        if (it.ch==='的') { const rest=(it.py||'').slice(1); return {...it, s2:`d的${rest}`, r2:true, pPart:rest, lead:'d'}; }
-        const py=it.py||''; if (py && initials.has(py[0])){ const rest=py.slice(1); return {...it, s2:`${py[0]}${it.ch}${rest}`, r2:true, pPart:rest, lead:py[0]}; }
-        return {...it, s2:`${it.ch}${py}`, r2:false, pPart:py, lead:''};
-      });
-      per2.forEach(it=>{ s2.push(it.nonHan? span('nonhan',it.s2) : span(it.r2?'r2':'plain', it.s2)); });
+			// Step 1 — Full pinyin
+			items.forEach(item => {
+				s1.push(item.nonHan ? span('nonhan', item.ch) : span('plain', item.ch + item.py));
+			});
 
-      // Step 3a
-      const per3a = per2.map(it=>{
-        if (it.nonHan) return {...it, s3a:it.s2, r3:false, pPart2:it.pPart};
-        const pp=it.pPart||''; if (pp.endsWith('ng')){ return {...it, s3a: it.s2.slice(0, it.s2.length-pp.length)+'ng', r3:true, pPart2:'ng'}; }
-        if (pp.endsWith('n')){ return {...it, s3a: it.s2.slice(0, it.s2.length-pp.length)+'n',  r3:true, pPart2:'n'}; }
-        return {...it, s3a:it.s2, r3:false, pPart2:pp};
-      });
-      per3a.forEach(it=>{ s3a.push(it.nonHan? span('nonhan',it.s3a) : span(it.r3?'r3':(it.r2?'r2':'plain'), it.s3a)); });
+			// Step 2 — Initial prepending (d/t/n/l/g/k)
+			const per2 = items.map(item => {
+				if (item.nonHan) {
+					return {
+						...item,
+						s2: item.ch,
+						r2: false,
+						pPart: ''
+					};
+				}
+				// if (item.ch === '的') {
+				//   const rest = (item.py || '').slice(1);
+				//   return {
+				//     ...item,
+				//     s2: `d的${rest}`,
+				//     r2: true,
+				//     pPart: rest,
+				//     lead: 'd'
+				//   };
+				// }
+				const py = item.py || '';
+				if (py && initials.has(py[0])) {
+					const rest = py.slice(1);
+					return {
+						...item,
+						s2: `${py[0]}${item.ch}${rest}`,
+						r2: true,
+						pPart: rest,
+						lead: py[0]
+					};
+				}
+				return {
+					...item,
+					s2: `${item.ch}${py}`,
+					r2: false,
+					pPart: py,
+					lead: ''
+				};
+			});
+			per2.forEach(item => {
+				s2.push(item.nonHan ? span('nonhan', item.s2) : span(item.r2 ? 'r2' : 'plain', item.s2));
+			});
 
-      // Step 3b
-      const per3b = per3a.map(it=>{
-        if (it.nonHan) return {...it, s3b:it.s3a};
-        const pp2=it.pPart2||''; if (pp2.endsWith('n')||pp2.endsWith('ng')) return {...it, s3b:it.s3a};
-        return {...it, s3b: it.s3a.replace(/[A-Za-z]+$/, '')};
-      });
-      per3b.forEach(it=>{
-        if (it.nonHan) { s3b.push(span('nonhan',it.s3b)); return; }
-        const changed = it.s3b !== it.s3a;
-        const cls = changed? 'r3' : (it.r3? 'r3' : (it.r2? 'r2' : 'plain'));
-        s3b.push(span(cls,it.s3b));
-      });
+			// Step 3a — Keep only final n/ng
+			const per3a = per2.map(item => {
+				if (item.nonHan) return {
+					...item,
+					s3a: item.s2,
+					r3: false,
+					pPart2: item.pPart
+				};
+				const pp = item.pPart || '';
+				if (pp.endsWith('ng')) {
+					return {
+						...item,
+						s3a: item.s2.slice(0, item.s2.length - pp.length) + 'ng',
+						r3: true,
+						pPart2: 'ng'
+					};
+				}
+				if (pp.endsWith('n')) {
+					return {
+						...item,
+						s3a: item.s2.slice(0, item.s2.length - pp.length) + 'n',
+						r3: true,
+						pPart2: 'n'
+					};
+				}
+				return {
+					...item,
+					s3a: item.s2,
+					r3: false,
+					pPart2: pp
+				};
+			});
+			per3a.forEach(item => {
+				let s;
+				if (item.nonHan) {
+					s = span('nonhan', items.s3a);
+				} else if (item.r3) {
+					s = 'r3';
+				} else if (item.r2) {
+					s = 'r2';
+				} else {
+					s = 'plain';
+				}
+				s3a.push(s);
+			});
 
-      // Final (Rule 4)
-      per3b.forEach((it,idx)=>{
-        if (it.nonHan) { sFinal.push(span('nonhan', it.ch)); return; }
-        const edited = per2[idx].r2 || per3a[idx].r3 || (it.s3b !== per3a[idx].s3a);
-        if (edited) sFinal.push(span(per2[idx].r2?'r2':'r3', it.s3b));
-        else sFinal.push(span('plain', it.ch));
-      });
+			// Step 3b — Remove other suffixes
+			const per3b = per3a.map(item => {
+				if (item.nonHan) return {
+					...item,
+					s3b: item.s3a
+				};
+				const pp2 = item.pPart2 || '';
+				if (pp2.endsWith('n') || pp2.endsWith('ng')) return {
+					...item,
+					s3b: item.s3a
+				};
+				return {
+					...item,
+					s3b: item.s3a.replace(/[A-Za-z]+$/, '')
+				};
+			});
+			per3b.forEach(item => {
+				if (item.nonHan) {
+					s3b.push(span('nonhan', item.s3b));
+					return;
+				}
+				const changed = item.s3b !== item.s3a;
+				let cls;
+				// if (changed) {
+				// cls = 'r3';
+				// } else
+				if (item.r3) {
+					cls = 'r3';
+				} else if (item.r2) {
+					cls = 'r2';
+				} else {
+					cls = 'plain';
+				}
 
-      return { s1:s1.join(''), s2:s2.join(''), s3a:s3a.join(''), s3b:s3b.join(''), final:sFinal.join('') };
-    }
+				s3b.push(span(cls, item.s3b));
+			});
 
-    // Plain-string annotator (for tests)
-    function annotatePlain(text){
-      const items=[]; for (const ch of text){ if(isHan(ch)) items.push({ch,py:getPinyinChar(ch)}); else items.push({ch,py:''}); }
-      const step2 = items.map(it=>{
-        if(!isHan(it.ch)) return it.ch;
-        if (it.ch==='的'){ const rest=(it.py||'').slice(1); return `d的${rest}`; }
-        const py=it.py||''; if(py && initials.has(py[0])) return `${py[0]}${it.ch}${py.slice(1)}`;
-        return `${it.ch}${py}`;
-      });
-      const step3a = step2.map(seg=>/(n|ng)$/.test(seg)? seg.replace(/[A-Za-z]*?(n|ng)$/,'$1'):seg);
-      const step3b = step3a.map(seg=>/(n|ng)$/.test(seg)? seg: seg.replace(/[A-Za-z]+$/,''));
-      // Rule 4: if no change from step2 & step3, strip to char only. We approximate by: if step3b still has letters after the char, it was edited; else it's just the char already.
-      // For final plain text, step3b already reflects edits; characters without edits will already be a single Han char.
-      return step3b.join('');
-    }
+			// Final (Rule 4)
+			per3b.forEach((item, i) => {
+				if (item.nonHan) {
+					sFinal.push(span('nonhan', item.ch));
+					return;
+				}
+				let edited = false;
+				if (per2[i].r2) {
+					console.log('per2i', item, i);
+					edited = true;
+				} else if (per3a[i].r3) {
+					console.log('per3i', item, i);
+					edited = true;
+				} else if (item.s3b !== per3a[i].s3a) {
+					console.log('change', item, i);
+					// edited = true;
+				}
+				if (edited) {
+					sFinal.push(span(per2[i].r2 ? 'r2' : 'r3', item.s3b));
+				}
+				else sFinal.push(span('plain', item.ch));
+			});
 
-    // UI helpers
-    const span=(cls,txt)=>`<span class="${cls}">${esc(txt)}</span>`;
-    const esc=(s)=>String(s).replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;','\'':'&#39;'}[c]));
+			return {
+				s1: s1.join(''),
+				s2: s2.join(''),
+				s3a: s3a.join(''),
+				s3b: s3b.join(''),
+				final: sFinal.join('')
+			};
+		}
 
-    // Wire up UI
-    const libStatus = document.getElementById('libStatus');
-    function setStatus(type,msg){
-      libStatus.innerHTML = `<span class="dot ${type}"></span><span>${esc(msg)}</span>`;
-    }
+		// Plain-string annotator (for tests)
+		function annotatePlain(text) {
+			const items = [];
+			for (const ch of text) {
+				if (isHan(ch)) items.push({
+					ch,
+					py: getPinyinChar(ch)
+				});
+				else items.push({
+					ch,
+					py: ''
+				});
+			}
+			const step2 = items.map(it => {
+				if (!isHan(it.ch)) return it.ch;
+				if (it.ch === '的') {
+					const rest = (it.py || '').slice(1);
+					return `d的${rest}`;
+				}
+				const py = it.py || '';
+				if (py && initials.has(py[0])) return `${py[0]}${it.ch}${py.slice(1)}`;
+				return `${it.ch}${py}`;
+			});
+			const step3a = step2.map(seg => /(n|ng)$/.test(seg) ? seg.replace(/[A-Za-z]*?(n|ng)$/, '$1') : seg);
+			const step3b = step3a.map(seg => /(n|ng)$/.test(seg) ? seg : seg.replace(/[A-Za-z]+$/, ''));
+			// Rule 4: if no change from step2 & step3, strip to char only. We approximate by: if step3b still has letters after the char, it was edited; else it's just the char already.
+			// For final plain text, step3b already reflects edits; characters without edits will already be a single Han char.
+			return step3b.join('');
+		}
 
-    async function initLib(){
-      setStatus('warn','Engine: loading…');
-      const ok = await ensurePinyinPro();
-      if (ok) setStatus('ok','Engine: pinyin-pro (online)');
-      else setStatus('err','Engine: fallback dict (limited)');
-    }
+		// UI helpers
+		const span = (cls, txt) => `<span class="${cls}">${esc(txt)}</span>`;
+		const esc = (s) => String(s).replace(/[&<>"']/g, c => ({
+			'&': '&amp;',
+			'<': '&lt;',
+			'>': '&gt;',
+			'"': '&quot;',
+			'\'': '&#39;'
+		}[c]));
 
-    document.getElementById('retryLib').addEventListener('click', initLib);
-    document.getElementById('annotateBtn').addEventListener('click', ()=>{
-      const txt = document.getElementById('lyrics').value || '';
-      const res = processLyrics(txt);
-      document.getElementById('s1').innerHTML = res.s1;
-      document.getElementById('s2').innerHTML = res.s2;
-      document.getElementById('s3a').innerHTML = res.s3a;
-      document.getElementById('s3b').innerHTML = res.s3b;
-      document.getElementById('final').innerHTML = res.final;
-    });
-    document.getElementById('copyBtn').addEventListener('click', async ()=>{
-      const tmp = document.createElement('div');
-      tmp.innerHTML = document.getElementById('final').innerHTML;
-      const text = tmp.textContent || '';
-      try { await navigator.clipboard.writeText(text); setStatus('ok','Final copied to clipboard'); setTimeout(()=>initLib(), 1500);} catch(_){ setStatus('err','Copy failed'); setTimeout(()=>initLib(), 1500);}
-    });
+		// Wire up UI
+		const libStatus = document.getElementById('libStatus');
 
-    // ---- Offline tests ----
-    const tests = [
-      { name:'Rule combos sample', input:'的到天空想雲藍', expected:'d的d到t天nk空ng想ng雲nl藍n' },
-      { name:'Non-initial: 回 (hui)', input:'回', expected:'回' },
-      { name:'Initial-only: 你 (ni)', input:'你', expected:'n你' },
-      { name:'Ends with n: 雲 (yun)', input:'雲', expected:'雲n' },
-      { name:'Mix: 的我', input:'的我', expected:'d的我' }
-    ];
+		// function setStatus(type, msg) {
+		//   libStatus.innerHTML = `<span class="dot ${type}"></span><span>${esc(msg)}</span>`;
+		// }
 
-    document.getElementById('runTests').addEventListener('click', ()=>{
-      let pass=0, fail=0; const lines=[];
-      for (const t of tests){
-        const got = annotatePlain(t.input);
-        const ok = got === t.expected;
-        ok? pass++ : fail++;
-        lines.push(`${ok? '✅':'❌'} ${t.name}\n   input: ${t.input}\n   expect: ${t.expected}\n   got:    ${got}`);
-      }
-      document.getElementById('testLog').textContent = lines.join('\n\n');
-      const sum = `${pass} passed / ${pass+fail} total`;
-      document.getElementById('testSummary').innerHTML = `<span class="dot ${fail? 'err':'ok'}"></span>${esc(sum)}`;
-    });
+		async function initLib() {
+			// setStatus('warn', 'Engine: loading…');
+			const ok = await ensurePinyinPro();
+			// if (ok) setStatus('ok', 'Engine: pinyin-pro (online)');
+			// else setStatus('err', 'Engine: fallback dict (limited)');
+		}
 
-    // Start
-    initLib();
-  </script>
+		// document.getElementById('retryLib').addEventListener('click', initLib);
+		document.getElementById('annotateBtn').addEventListener('click', () => {
+			const txt = document.getElementById('lyrics').value || '';
+			const res = processLyrics(txt);
+			// document.getElementById('s1').innerHTML = res.s1;
+			// document.getElementById('s2').innerHTML = res.s2;
+			// document.getElementById('s3a').innerHTML = res.s3a;
+			// document.getElementById('s3b').innerHTML = res.s3b;
+			document.getElementById('final').innerHTML = res.final;
+		});
+		document.getElementById('copyBtn').addEventListener('click', async () => {
+			const tmp = document.createElement('div');
+			tmp.innerHTML = document.getElementById('final').innerHTML;
+			const text = tmp.textContent || '';
+			try {
+				await navigator.clipboard.writeText(text);
+				// setStatus('ok', 'Final copied to clipboard');
+				setTimeout(() => initLib(), 1500);
+			} catch (_) {
+				// setStatus('err', 'Copy failed');
+				setTimeout(() => initLib(), 1500);
+			}
+		});
+
+		// ---- Offline tests ----
+		const tests = [{
+			name: 'Rule combos sample',
+			input: '的到天空想雲藍',
+			expected: 'd的d到t天nk空ng想ng雲nl藍n'
+		},
+		{
+			name: 'Non-initial: 回 (hui)',
+			input: '回',
+			expected: '回'
+		},
+		{
+			name: 'Initial-only: 你 (ni)',
+			input: '你',
+			expected: 'n你'
+		},
+		{
+			name: 'Ends with n: 雲 (yun)',
+			input: '雲',
+			expected: '雲n'
+		},
+		{
+			name: 'Mix: 的我',
+			input: '的我',
+			expected: 'd的我'
+		}
+		];
+
+		// document.getElementById('runTests').addEventListener('click', () => {
+		//   let pass = 0,
+		//     fail = 0;
+		//   const lines = [];
+		//   for (const t of tests) {
+		//     const got = annotatePlain(t.input);
+		//     const ok = got === t.expected;
+		//     ok ? pass++ : fail++;
+		//     lines.push(`${ok ? '✅' : '❌'} ${t.name}\n   input: ${t.input}\n   expect: ${t.expected}\n   got:    ${got}`);
+		//   }
+		//   document.getElementById('testLog').textContent = lines.join('\n\n');
+		//   const sum = `${pass} passed / ${pass + fail} total`;
+		//   document.getElementById('testSummary').innerHTML = `<span class="dot ${fail ? 'err' : 'ok'}"></span>${esc(sum)}`;
+		// });
+
+		// Start
+		initLib();
+	</script>
 </body>
+
 </html>
