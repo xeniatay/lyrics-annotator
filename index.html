@@ -40,7 +40,7 @@
 
     /* highlighting */
     .r2{color:var(--b1);font-weight:700}
-    .r3{color:var(--b2);font-weight:700}
+    /* .r3{color:var(--b2);font-weight:700} */
     .plain{color:var(--text)}
     .nonhan{color:var(--muted)}
 
@@ -231,7 +231,7 @@
       const tmp = document.createElement('div');
       tmp.innerHTML = document.getElementById('final').innerHTML;
       const text = tmp.textContent || '';
-      try { await navigator.clipboard.writeText(text); setStatus('ok','Final copied to clipboard'); setTimeout(()=>initLib(), 1500);} catch(_){ setStatus('err','Copy failed'); setTimeout(()=>initLib(), 1500);} 
+      try { await navigator.clipboard.writeText(text); setStatus('ok','Final copied to clipboard'); setTimeout(()=>initLib(), 1500);} catch(_){ setStatus('err','Copy failed'); setTimeout(()=>initLib(), 1500);}
     });
 
     // ---- Offline tests ----
