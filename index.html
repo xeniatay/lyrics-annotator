@@ -260,6 +260,7 @@
 			<textarea id="lyrics"
 								placeholder="在这里粘贴中文歌词…\n示例：茫茫人海之中 我找到我的家"></textarea>
 			<div class="controls">
+				<button id="pasteBtn" class="ghost">Paste</button>
 				<button id="annotateBtn">Annotate</button>
 				<button id="copyBtn"
 								class="ghost">Copy Final</button>
@@ -694,6 +695,16 @@
 				setTimeout(() => initLib(), 1500);
 			}
 		});
+
+    document.getElementById('pasteBtn').addEventListener('click', async () => {
+			try {
+				const text = await navigator.clipboard.readText();
+				document.getElementById('lyrics').value = text;
+			} catch (err) {
+				console.error('Failed to read clipboard contents: ', err);
+				// Provide user feedback, e.g., "Paste failed. Please use Ctrl+V."
+			}
+    });
 
 		// ---- Offline tests ----
 		const tests = [{
